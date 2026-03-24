@@ -9,12 +9,13 @@ import numpy as np
 
 from tqdm import tqdm
 
-# def import_class(name):
-    # components = name.split('.')
-    # mod = __import__(components[0])
-    # for comp in components[1:]:
-        # mod = getattr(mod, comp)
-    # return mod
+
+def import_class(name):
+    components = name.split('.')
+    mod = __import__(components[0])
+    for comp in components[1:]:
+        mod = getattr(mod, comp)
+    return mod
 
 def import_class(import_str):
     mod_str, _sep, class_str = import_str.rpartition('.')
