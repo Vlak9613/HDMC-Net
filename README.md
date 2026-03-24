@@ -460,19 +460,17 @@ This project is built upon the following open-source works:
 - [2s-AGCN](https://github.com/lshiwjx/2s-AGCN) — Two-stream adaptive graph convolutional network
 - [CTR-GCN](https://github.com/Uason-Chen/CTR-GCN) — Channel-wise topology refinement graph convolution
 
-Data processing code is adapted from:
-- [SGN](https://github.com/microsoft/SGN), [HCN](https://github.com/huguyuehuhu/HCN-pytorch), [Predict & Cluster](https://github.com/shlizee/Predict-Cluster)
 
 ## Citation
 
 If you find this work useful for your research, please cite:
 
 ```bibtex
-@article{hdmcnet2025,
+@article{hdmcnet2026,
   title={HDMC-Net: A Proactive Online Skeleton Early-Action Intent Recognition Network for Human-Robot Collaborative Assembly Scenarios},
   author={},
   journal={},
-  year={2025}
+  year={2026}
 }
 ```
 
