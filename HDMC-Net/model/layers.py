@@ -75,7 +75,7 @@ class GCN(nn.Module):
 
 class HDGC(nn.Module):
     """
-    HDGC (Hybrid Dynamic Graph Convolution) - 混合动态图卷积
+    HDGC (Hybrid Dynamic Graph Convolution)
     
     Core Design:
     ============
@@ -83,26 +83,26 @@ class HDGC(nn.Module):
     
     Key Features:
     =============
-    1. Hybrid Topology Fusion (混合拓扑融合)
+    1. Hybrid Topology Fusion
        - A_prior: Skeleton prior topology (learnable, initialized from anatomy)
        - A_adapt: Sample-adaptive topology (computed via attention)
        - λ: Learnable fusion weight balancing prior and adaptive
     
-    2. Multi-Scale Adjacency (多尺度邻接)
+    2. Multi-Scale Adjacency
        - 1-hop: Direct physical connections (e.g., wrist-elbow)
        - 2-hop: Indirect connections (e.g., wrist-shoulder)
        - Expands receptive field for distant joint relations
     
-    3. Channel-wise Attention (通道注意力)
+    3. Channel-wise Attention
        - A_adapt = softmax(φ(X) @ ψ(X)^T / √d)
        - Query-Key mechanism similar to Transformer
        - Dynamically generates adjacency per sample
     
-    4. Gated Stability (门控稳定机制)
+    4. Gated Stability
        - Sigmoid gating prevents gradient explosion
        - Improves training stability
     
-    5. Multi-Head Design (多头设计)
+    5. Multi-Head Design
        - Parallel learning of multiple relation patterns
        - Enhanced expressiveness
     

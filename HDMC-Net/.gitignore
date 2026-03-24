@@ -1,0 +1,88 @@
+# ========================
+# Python
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ========================
+# Virtual Environments
+# ========================
+venv/
+env/
+.env/
+.venv/
+
+# ========================
+# IDE / Editor
+# ========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+
+# ========================
+# OS Files
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========================
+# Data Files (too large for GitHub)
+# ========================
+data/ntu/
+data/nturgbd_raw/
+data/NW-UCLA/
+data/hrc/raw_skeletons/
+data/hrc/denoised_data/
+data/hrc/statistics/
+data/hrc/*.npz
+*.npy
+*.npz
+*.pkl
+*.h5
+*.hdf5
+
+# ========================
+# Model Checkpoints
+# ========================
+*.pth
+*.pt
+*.ckpt
+checkpoints/
+runs/
+
+# ========================
+# Wandb Logs
+# ========================
+wandb/
+
+# ========================
+# Logs & Outputs
+# ========================
+*.log
+logs/
+output/
+results/
+
+# ========================
+# Jupyter Notebook
+# ========================
+.ipynb_checkpoints/
+
+# ========================
+# Misc
+# ========================
+*.zip
+*.tar.gz
+*.tar
+*.rar

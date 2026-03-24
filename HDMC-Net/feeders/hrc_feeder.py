@@ -2,12 +2,12 @@
 HDMC-Net HRC-Assembly Dataset Feeder
 
 Data loader for HRC-Assembly skeleton action recognition dataset.
-特点:
-  - 单人数据 (M=1, 25 关节, Azure Kinect)
-  - repeat 机制（模仿 UCLA）增加小数据集的训练样本量
-  - Azure Kinect mm → meters 坐标缩放
-  - 修正的 valid_frame_num 计算（适配 M=1）
-  - 保守旋转增强 (theta=0.3)，适合微动作
+Features:
+  - Single-person data (M=1, 25 joints, Azure Kinect)
+  - Repeat mechanism (similar to UCLA) to augment small dataset
+  - Azure Kinect mm -> meters coordinate scaling
+  - Corrected valid_frame_num calculation for M=1
+  - Conservative rotation augmentation (theta=0.3) for micro-actions
 """
 
 import numpy as np
@@ -58,7 +58,7 @@ class Feeder(Dataset):
         self.random_rot = random_rot
         self.vel = vel
         self.A = A
-        # repeat 机制: 训练时重复 repeat 次, 测试时不重复
+        # Repeat mechanism: repeat data `repeat` times during training, no repeat during testing
         self.repeat = repeat if split == 'train' else 1
         self.load_data()
         if sort:
@@ -70,8 +70,8 @@ class Feeder(Dataset):
     def load_data(self):
         """Load data from npz file.
         
-        HRC 数据格式: (N, T, 150) 其中 150 = 2人×25关节×3坐标
-        但 HRC 是单人数据，后 75 维为零填充。
+        HRC data format: (N, T, 150) where 150 = 2 persons x 25 joints x 3 coords.
+        HRC is single-person data; the last 75 dims are zero-padded.
         """
         npz_data = np.load(self.data_path)
         if self.split == 'train':
@@ -83,7 +83,7 @@ class Feeder(Dataset):
         else:
             raise NotImplementedError('data split only supports train/test')
 
-        # 过滤 NaN 样本
+        # Filter out NaN samples
         nan_out = np.isnan(self.data.mean(-1).mean(-1)) == False
         self.data = self.data[nan_out]
         self.label = self.label[nan_out]
@@ -92,18 +92,19 @@ class Feeder(Dataset):
 
         N, T, _ = self.data.shape
 
-        # 单人优化: 只取前 75 维 (第一个人)，避免浪费计算在零填充的第二人上
+        # Single-person optimization: take only first 75 dims (person 1)
+        # Avoids wasted computation on zero-padded second person
         self.data = self.data[:, :, :75]
 
-        # 骨架对齐变换 (如果有)
+        # Skeleton alignment transformation (if provided)
         if self.A is not None:
             self.data = self.data.reshape((N * T, 25, 3))
             self.data = np.array(self.A) @ self.data
 
-        # reshape 为 (N, C, T, V, M) 格式, M=1 (单人)
+        # Reshape to (N, C, T, V, M) format, M=1 (single person)
         self.data = self.data.reshape(N, T, 1, 25, 3).transpose(0, 4, 1, 3, 2)
 
-        # Azure Kinect mm -> meters, 与模型参数尺度对齐
+        # Azure Kinect mm -> meters, align with model parameter scale
         self.data = self.data / 1000.0
 
     def get_n_per_class(self):
@@ -127,22 +128,22 @@ class Feeder(Dataset):
         self.std_map = data.transpose((0, 2, 4, 1, 3)).reshape((N * T * M, C * V)).std(axis=0).reshape((C, 1, V, 1))
 
     def __len__(self):
-        """repeat 机制: 训练时返回 repeat 倍的长度"""
+        """Repeat mechanism: return repeat * actual length during training."""
         return len(self.label) * self.repeat
 
     def __iter__(self):
         return self
 
     def __getitem__(self, index):
-        # repeat 机制: 取模获得真实索引
+        # Repeat mechanism: modulo to get real index
         real_index = index % len(self.label)
         data_numpy = np.array(self.data[real_index])
         label = self.label[real_index]
 
-        # 计算有效帧数 —— 修正版 (适配 M=1)
+        # Compute valid frame count — corrected for M=1
         # data_numpy shape: (C=3, T, V=25, M=1)
         valid_frame = data_numpy.sum(0, keepdims=True).sum(2, keepdims=True)  # (1, T, 1, 1)
-        # 对 M=1 的数据，显式 squeeze 掉 axis 0, 2, 3，只留 T 维
+        # For M=1 data, explicitly squeeze axes 0, 2, 3 to keep only T dimension
         valid_frame_num = np.sum(np.squeeze(valid_frame, axis=(0, 2, 3)) != 0)
 
         # Temporal crop + resize
@@ -150,11 +151,11 @@ class Feeder(Dataset):
             data_numpy, valid_frame_num, self.p_interval, self.window_size)
         mask = (abs(data_numpy.sum(0, keepdims=True).sum(2, keepdims=True)) > 0)
 
-        # 保守旋转增强 (theta=0.3)，适合微动作
+        # Conservative rotation augmentation (theta=0.3) for micro-actions
         if self.random_rot:
             data_numpy = feeder_utils.random_rot(data_numpy, theta=0.3)
 
-        # 速度特征
+        # Velocity features
         if self.vel:
             data_numpy[:, :-1] = data_numpy[:, 1:] - data_numpy[:, :-1]
             data_numpy[:, -1] = 0
