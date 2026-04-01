@@ -1,6 +1,6 @@
 # HDMC-Net
 
-### A Proactive Online Skeleton Early-Action Intent Recognition Network for Human-Robot Collaborative Assembly Scenarios
+### An Online Skeleton Early-Action Intent Recognition Network for Human-Robot Collaborative Assembly Scenarios
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.8+-blue.svg" alt="Python">
@@ -10,7 +10,7 @@
 
 This is the official implementation of the paper:
 
-> **HDMC-Net: A Proactive Online Skeleton Early-Action Intent Recognition Network for Human-Robot Collaborative Assembly Scenarios**
+> **HDMC-Net: An Online Skeleton Early-Action Intent Recognition Network for Human-Robot Collaborative Assembly Scenarios**
 
 ## Overview
 
