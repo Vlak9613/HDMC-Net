@@ -1,4 +1,4 @@
-# HDMC-Net
+# Hybrid Dynamic Momentum Causal Network (HDMC-Net)
 
 ### An Online Skeleton Early-Action Intent Recognition Network for Human-Robot Collaborative Assembly Scenarios
 
